@@ -110,11 +110,21 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   category: "Hair Salon",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    title: "Bloom Kreations",
+    capable: true,
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: "#fdf6ee",
   colorScheme: "light",
+  // The header is a translucent cream bar, so the browser chrome matching it
+  // keeps the top of the page reading as one surface on mobile.
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

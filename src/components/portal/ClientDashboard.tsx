@@ -298,6 +298,9 @@ function StageRail({ current }: { current: string }) {
     <ol className="mt-8 grid gap-3 sm:grid-cols-4">
       {LOC_STAGES.map((s, i) => {
         const active = i === idx;
+        // Stages already passed get the honey rule; the current one gets the
+        // neon border. Differentiated by colour rather than by opacity, because
+        // fading an already-dim tone drops it below AA.
         const done = i < idx;
         return (
           <li
@@ -306,7 +309,9 @@ function StageRail({ current }: { current: string }) {
               "rounded-card border p-5 transition-colors",
               active
                 ? "border-rose-lite/50 bg-studio-2"
-                : "border-copper/25 bg-studio-2/50"
+                : done
+                  ? "border-honey-lite/30 bg-studio-2/50"
+                  : "border-copper/25 bg-studio-2/50"
             )}
           >
             <div className="flex items-start justify-between gap-3">
