@@ -1,26 +1,288 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================================
+   Bloom Kreations — design tokens.
+   Every value here is documented in DESIGN.md. Do not introduce a colour, radius
+   or type size that is not declared in this block.
+   ========================================================================== */
+
+@theme {
+  /* --- Palette (sampled from her own photographs) --------------------- */
+  --color-cream: #fdf6ee;
+  --color-shell: #f6eadc;
+  --color-sand: #eadac6;
+
+  --color-studio: #120c0d;
+  --color-studio-2: #1d1416;
+
+  --color-ink: #191009;
+  --color-ink-soft: #5a483a;
+
+  --color-honey: #9e5715;
+  --color-honey-lite: #e9a24a;
+  --color-copper: #a0694b;
+  --color-espresso: #412b1a;
+
+  --color-rose: #c21e52;
+  --color-rose-lite: #ff4d8d;
+  --color-rose-glow: #ff3d7f;
+
+  --color-bone: #f7ece0;
+  --color-bone-dim: #c4ae9c;
+
+  /* --- Type ------------------------------------------------------------ */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: clamp(3rem, 9vw, 8.5rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.035em;
+
+  --text-h1: clamp(2.5rem, 6vw, 5rem);
+  --text-h1--line-height: 0.98;
+  --text-h1--letter-spacing: -0.03em;
+
+  --text-h2: clamp(2rem, 4.2vw, 3.5rem);
+  --text-h2--line-height: 1.02;
+  --text-h2--letter-spacing: -0.025em;
+
+  --text-h3: clamp(1.35rem, 2.2vw, 1.85rem);
+  --text-h3--line-height: 1.18;
+  --text-h3--letter-spacing: -0.015em;
+
+  --text-lead: clamp(1.075rem, 1.5vw, 1.3rem);
+  --text-lead--line-height: 1.6;
+
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.18em;
+
+  /* --- Radius ---------------------------------------------------------- */
+  --radius-pill: 999px;
+  --radius-card: 1.5rem;
+  --radius-media: 1.75rem;
+  --radius-sheet: 2.5rem;
+
+  /* --- Elevation (warm, never grey) ------------------------------------ */
+  --shadow-soft: 0 1px 2px rgb(65 43 26 / 0.06), 0 12px 32px -12px rgb(65 43 26 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(65 43 26 / 0.08), 0 28px 60px -24px rgb(65 43 26 / 0.32);
+  --shadow-glow: 0 0 0 1px rgb(255 61 127 / 0.22), 0 18px 60px -22px rgb(255 61 127 / 0.45);
+
+  /* --- Rhythm ---------------------------------------------------------- */
+  --spacing-section: clamp(5rem, 10vw, 9rem);
+  --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
+
+  /* --- Motion ---------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================================================
+   Base
+   ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
+    scroll-behavior: auto; /* Lenis owns scrolling; native smooth would fight it */
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 40;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-rose);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-rose);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Studio sections invert the focus ring so it stays visible on near-black. */
+  .studio :focus-visible {
+    outline-color: var(--color-rose-lite);
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================================
+   Utilities
+   ========================================================================== */
+
+@utility container-page {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility measure {
+  max-width: 68ch;
+}
+
+/* Reveal primitive. Elements start hidden and are released either by GSAP or,
+   if JS never runs, by the no-js fallback below. Content is never lost. */
+@utility reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  will-change: transform, opacity;
+}
+
+@layer utilities {
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s var(--ease-out-soft),
+      transform 0.7s var(--ease-out-soft);
+  }
+
+  /* If JS is disabled the reveal class never resolves, so force it visible. */
+  .no-js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .studio {
+    background-color: var(--color-studio);
+    color: var(--color-bone);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 24px rgb(255 61 127 / 0.55);
+  }
+
+  /* Neon rule used under eyebrows inside studio sections. */
+  .neon-rule {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-rose-lite),
+      transparent
+    );
+    height: 1px;
+  }
+
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+  }
+
+  /* Marquee. Duration is set inline; direction flips via a CSS variable that
+     the scroll-velocity hook writes to. */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: bk-marquee var(--marquee-duration, 40s) linear infinite;
+    animation-direction: var(--marquee-direction, normal);
+  }
+
+  @keyframes bk-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  /* Slow independent drift for the footer butterfly. */
+  .drift {
+    animation: bk-drift 9s var(--ease-in-out-soft) infinite;
+  }
+
+  @keyframes bk-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(-2deg);
+    }
+    50% {
+      transform: translate3d(0, -14px, 0) rotate(2deg);
+    }
+  }
+
+  /* Line-art draw-on-scroll. GSAP scrubs --draw from 1 to 0. */
+  .draw-path {
+    stroke-dasharray: var(--draw-length, 1000);
+    stroke-dashoffset: calc(var(--draw-length, 1000) * var(--draw, 1));
+  }
+}
+
+/* ============================================================================
+   Reduced motion — same content, no scrubbing.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .marquee-track,
+  .drift {
+    animation: none !important;
+  }
+
+  .draw-path {
+    stroke-dashoffset: 0 !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Print: strip the studio inversion so the service menu prints legibly. */
+@media print {
+  .studio {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
 }

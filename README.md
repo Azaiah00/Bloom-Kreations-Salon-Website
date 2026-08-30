@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bloom Kreations
 
-## Getting Started
+Website and booking portal for **Bloom Kreations LLC** — Latesha Reed, loctician,
+Bridgeport, Chicago.
 
-First, run the development server:
+Next.js 16 (App Router) · TypeScript · Tailwind v4 · GSAP ScrollTrigger · Lenis ·
+self-hosted variable fonts · deployed to Netlify.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run verify     # typecheck + lint + contrast + build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What is here
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Marketing site** — home, services and prices, gallery, the loc journey, about,
+visit, questions, policies.
+**Booking** — a five-step booker with a running price and duration total, showing the
+finish time before you confirm.
+**Portal** — separate client and owner dashboards, running in demo mode on typed mock
+data.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Her live Acuity calendar is linked from every booking surface, so the site converts
+from day one regardless of the portal.
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+| File | What it holds |
+|---|---|
+| `HANDOFF.md` | The credential caution, everything the client still owes, the positioning strategy, deploy steps, and the audit results |
+| `DESIGN.md` | Tokens, the measured contrast table, the type scale, and the motion spec |
+| `CLAUDE.md` | Standing rules for anyone (or any agent) working on this next |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Audits
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run audit:contrast   # measured WCAG ratios against globals.css
+npm run audit:a11y       # rendered-DOM: contrast, alt, headings, targets, overflow,
+                         # landmarks, shipped placeholders, emoji
+npm run audit:flow       # 13 end-to-end tests incl. reduced motion and no-JS
+npm run frames           # viewport frames at scroll depths, for pinned sections
+```
 
-## Deploy on Vercel
+The three audit scripts need the built site running on `:3100`
+(`npm run build && npx next start -p 3100`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Facts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Every fact about the business lives in `src/lib/business.ts` — NAP, hours, the full
+service menu with real prices and durations, and real attributed Google reviews.
+`src/lib/schema.ts` generates the JSON-LD from that same file, so the structured data
+and the page can never disagree. Nothing in this repo invents a fact about her.
