@@ -41,15 +41,16 @@ export default function SiteFooter() {
     <footer className="studio grain relative overflow-hidden">
       {/* Oversized drifting mark. Decorative only. */}
       <Butterfly
-        className="drift pointer-events-none absolute -right-16 -top-10 w-[26rem] text-rose-lite/[0.07] sm:-right-8"
-        strokeWidth={0.8}
+        px={416}
+        animate="flap"
+        className="pointer-events-none absolute -right-16 -top-10 w-[26rem] text-rose-lite/[0.09] sm:-right-8"
       />
 
       <div className="container-page relative py-section">
         <div className="grid gap-14 lg:grid-cols-[1.15fr_2fr]">
           <div>
             <Link href="/" className="inline-flex min-h-11 items-center gap-3">
-              <Butterfly className="size-8 text-rose-lite" strokeWidth={2.2} />
+              <Butterfly px={32} neon className="size-8 text-rose-lite" />
               <Wordmark className="text-2xl text-bone" />
             </Link>
 

@@ -13,8 +13,10 @@
     "audit:flow": "node scripts/flow.mjs",
     "shots": "node scripts/shots.mjs",
     "frames": "node scripts/frames.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run audit:contrast && npm run build && npm run audit:css",
-    "audit:css": "node scripts/check-css.mjs"
+    "verify": "npm run typecheck && npm run lint && npm run audit:contrast && npm run audit:icons && npm run build && npm run audit:css",
+    "audit:css": "node scripts/check-css.mjs",
+    "icons": "node scripts/gen-icons.mjs",
+    "audit:icons": "node scripts/gen-icons.mjs --check"
   },
   "dependencies": {
     "gsap": "^3.15.0",
@@ -32,10 +34,11 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
     "playwright": "^1.62.1",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "description": "Website and booking portal for Bloom Kreations LLC \u2014 Latesha Reed, loctician, Bridgeport, Chicago.",
+  "description": "Website and booking portal for Bloom Kreations LLC — Latesha Reed, loctician, Bridgeport, Chicago.",
   "engines": {
     "node": ">=20.9"
   }

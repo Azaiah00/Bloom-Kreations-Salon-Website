@@ -124,8 +124,9 @@ export default function AboutPage() {
                 />
               </div>
               <Butterfly
+                px={96}
+                animate="weave"
                 className="absolute -bottom-6 -left-6 w-24 text-rose"
-                strokeWidth={1.8}
               />
             </figure>
           </div>

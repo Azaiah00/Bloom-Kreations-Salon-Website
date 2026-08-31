@@ -57,7 +57,7 @@ export default function PortalShell({
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           <aside className="shrink-0 lg:w-56">
             <Link href="/" className="inline-flex items-center gap-2.5">
-              <Butterfly className="size-7 text-rose-lite" strokeWidth={2.2} />
+              <Butterfly px={28} neon className="size-7 text-rose-lite" />
               <Wordmark className="text-lg text-bone" />
             </Link>
 

@@ -72,10 +72,17 @@ These are flagged on the site itself (a "needs confirming" note on the service c
   high-resolution file would be better. *Note:* the best studio image on her personal
   account (red dress, roses) was deliberately not used — it is a fashion image and
   would undercut the professional positioning.
-- **Logo.** She has no logo file. The butterfly, bloom, crown and loc-coil marks in
-  `src/components/marks/Marks.tsx` were drawn for this build from the vocabulary she
-  already uses on both Instagram accounts. They are hers to keep either way, and they
-  are pure SVG so they scale to signage.
+- **Logo.** The butterfly is traced from the generated logo artwork she supplied, at
+  `src/components/marks/butterfly-paths.ts` — vector, so it scales to signage, embroidery
+  or a vinyl decal without redrawing. Three variants (full rope detail, outline, filled
+  silhouette) are picked automatically by rendered size. The favicon, tab icon, Apple
+  touch icon and both manifest icons are **generated from those same paths** by
+  `npm run icons`; `npm run audit:icons` fails the build if any is stale. Change the
+  artwork and every icon follows. The bloom, crown, loc-coil and wordmark are still
+  drawn line art from her Instagram vocabulary.
+- **Source artwork.** Keep the original logo PNGs. The trace can be regenerated
+  (`logo/silhouette.py` and the tracing notes in `logo/`), but only from the raster
+  originals — they are the master, not the SVG.
 - **Domain.** The build assumes `bloomkreations.com`. Change `SITE` in
   `src/lib/schema.ts` and `metadataBase` in `src/app/layout.tsx` if it differs.
 

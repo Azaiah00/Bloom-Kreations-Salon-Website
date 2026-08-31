@@ -730,7 +730,7 @@ function Summary({
       <div className="rounded-sheet border border-sand bg-shell p-7">
         <div className="flex items-center justify-between gap-3">
           <Eyebrow>Your appointment</Eyebrow>
-          <Butterfly className="size-6 text-rose" strokeWidth={2.2} />
+          <Butterfly px={24} className="size-6 text-rose" />
         </div>
 
         <dl className="mt-6 flex flex-col gap-4 text-sm">

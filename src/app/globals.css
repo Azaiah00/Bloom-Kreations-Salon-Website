@@ -1,4 +1,13 @@
-@import "tailwindcss";
+/*
+ * source(none) + an explicit @source, rather than Tailwind's automatic
+ * detection. The docs and the audit scripts quote broken class names as
+ * evidence — CLAUDE.md, DESIGN.md and scripts/check-css.mjs all contain the
+ * compound arbitrary variant that broke the pinned sections. Left to scan the
+ * whole project, Tailwind compiles those quotations into real, broken rules and
+ * Lightning CSS warns on every build. Every class this site uses is in src/.
+ */
+@import "tailwindcss" source(none);
+@source "../../src";
 
 /*
  * Pinned-section viewport gates — must match PIN_QUERY and RAIL_QUERY in

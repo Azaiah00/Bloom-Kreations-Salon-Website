@@ -9,7 +9,7 @@ not a token below.** If something needs a value that does not exist here, add it
 
 Warm cream ground for everything you have to *read* (menu, prices, policies, FAQ), near-black **studio**
 sections for everything you have to *look at* (gallery, hero, booking). A single neon rose accent carries
-the playfulness; honey carries the warmth. Line-art butterfly and bloom marks draw themselves on scroll.
+the playfulness; honey carries the warmth. The butterfly mark's rope coils weave themselves on scroll.
 
 The reference client is a Chicago loctician whose Instagram is neon-pink script on black and whose work
 is photographed in a dark salon. Cream makes her prices legible and her site rank; black makes her hair
@@ -17,6 +17,33 @@ photography look like the work it is. The site alternates between the two on pur
 
 **No emoji anywhere.** Her Instagram voice is emoji-rich; we keep her phrasing and drop the emoji, and
 use Lucide icons or the brand SVG marks in their place.
+
+
+### 1a. The mark
+
+The butterfly is **traced from real artwork**, not drawn in JSX. `logo/` holds the pipeline;
+`src/components/marks/butterfly-paths.ts` is its generated output and must never be hand-edited.
+
+Three variants share one viewBox (`0 0 128 99.97`), so they are drop-in swappable:
+
+| Variant | Subpaths | Holds down to | Where |
+|---|---|---|---|
+| `detail` | 51 rope segments in four wing groups + body + antennae | ~40px | Section ornaments, hero, footer |
+| `solid` | the same outline as one path | ~22px | Nav, footer logo, booker |
+| `silhouette` | every rope loop filled in | 16px | Marquee separators, favicon, tab icon |
+
+`<Butterfly px={n} />` picks the variant from the size you declare — the call site cannot ship a
+mushy 20px line drawing. Rope segments inside each wing are ordered **body-outward** by radial
+distance, which is the whole reason a plain GSAP stagger reads as a loc being twisted into existence.
+
+`neon` scales its glow with `px`: a fixed radius is invisible behind the 416px footer mark and a pink
+smear behind a 24px one. Neon is for studio (near-black) grounds only.
+
+**The icons are generated, never drawn.** `npm run icons` rebuilds `favicon.ico` (16/32/48),
+`icon.svg`, `apple-icon.png` and the three manifest PNGs from the same traced paths, reading the
+palette straight out of `globals.css`. `npm run audit:icons` fails the build if any of them is stale,
+which is what stops a favicon drifting away from the logo on the page. Tab-sized icons get the
+silhouette; home-screen icons get the outline — they are never seen side by side.
 
 ---
 
@@ -131,13 +158,13 @@ One signature move per section, never two.
 |---|---|
 | Hero | Headline words rise and un-blur on load; portrait plate parallaxes at `y: -12%`; scroll cue fades out over the first 400px |
 | Marquee | Continuous ticker whose direction and speed are driven by scroll velocity |
-| Signature marks | Butterfly + bloom SVG line art **draws itself** (`stroke-dashoffset` scrubbed) as its section enters |
+| Signature marks | Butterfly rope segments **weave** outward from the body, staggered 25ms; bloom/crown line art draws itself (`stroke-dashoffset` scrubbed) |
 | Loc Journey | **Pinned** section; four stages scrub horizontally, progress rail fills |
 | Services | Cards stagger up 24px with a 60ms offset as the grid crosses 85% viewport |
 | Gallery | Horizontal scroll track driven by vertical scroll; each tile scales `0.94 → 1` at centre |
 | Numbers | Counters count up once, on first entry only |
 | Studio sections | Ground colour cross-fades cream → studio as the section pins to the top |
-| Footer | Butterfly mark drifts on a slow `y` loop, independent of scroll |
+| Footer | Oversized butterfly **flaps** — each wing group scales around the body centreline, independent of scroll |
 
 **Rules.** Every ScrollTrigger is registered client-side and killed on unmount. Everything above is
 wrapped in a single `prefers-reduced-motion` guard that swaps scrubbing for an instant final state —

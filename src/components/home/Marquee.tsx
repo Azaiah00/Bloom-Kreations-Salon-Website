@@ -50,7 +50,7 @@ export default function Marquee() {
                 <span className="whitespace-nowrap font-display text-xl font-bold tracking-tight text-bone sm:text-2xl">
                   {w}
                 </span>
-                <Butterfly className="size-5 shrink-0 text-rose-lite" strokeWidth={2.4} />
+                <Butterfly px={20} className="size-5 shrink-0 text-rose-lite" />
               </li>
             ))}
           </ul>

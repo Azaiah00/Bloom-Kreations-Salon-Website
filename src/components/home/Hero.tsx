@@ -142,7 +142,7 @@ export default function Hero() {
                   {BUSINESS.owner.role} &middot; Traveling loctician
                 </p>
               </div>
-              <Butterfly className="size-10 shrink-0 text-rose-lite" strokeWidth={2} />
+              <Butterfly px={40} neon className="size-10 shrink-0 text-rose-lite" />
             </figcaption>
           </div>
 

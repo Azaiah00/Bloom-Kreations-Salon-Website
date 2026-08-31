@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { BUSINESS } from "@/lib/business";
+import { BUTTERFLY_VIEWBOX, SOLID_PATH } from "@/components/marks/butterfly-paths";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -26,26 +27,45 @@ export default function OpengraphImage() {
           position: "relative",
         }}
       >
-        {/* Neon wash */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(60% 70% at 85% 15%, rgba(255,61,127,0.28), transparent 70%), radial-gradient(55% 60% at 10% 90%, rgba(233,162,74,0.22), transparent 70%)",
-            display: "flex",
-          }}
-        />
+        {/* Neon wash and the mark's glow, both drawn as one inline SVG.
+            Satori renders only the first of a comma-separated CSS background
+            and clips a radial-gradient to its own box — an absolutely
+            positioned div comes out as a visible glowing square. Inline SVG is
+            handed to resvg instead, which does gradients properly. */}
+        <svg
+          width={size.width}
+          height={size.height}
+          viewBox={`0 0 ${size.width} ${size.height}`}
+          style={{ position: "absolute", top: 0, left: 0 }}
+        >
+          <defs>
+            <radialGradient id="wash-rose" cx="0.85" cy="0.12" r="0.7">
+              <stop offset="0" stopColor="#FF3D7F" stopOpacity="0.32" />
+              <stop offset="1" stopColor="#FF3D7F" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="wash-honey" cx="0.08" cy="0.92" r="0.62">
+              <stop offset="0" stopColor="#E9A24A" stopOpacity="0.16" />
+              <stop offset="1" stopColor="#E9A24A" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="mark-glow">
+              <stop offset="0" stopColor="#FF4D8D" stopOpacity="0.42" />
+              <stop offset="1" stopColor="#FF4D8D" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect width={size.width} height={size.height} fill="url(#wash-rose)" />
+          <rect width={size.width} height={size.height} fill="url(#wash-honey)" />
+          <circle cx={115} cy={107} r={108} fill="url(#mark-glow)" />
+        </svg>
 
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          {/* Butterfly mark */}
-          <svg width="64" height="58" viewBox="0 0 100 90" fill="none" stroke="#FF4D8D" strokeWidth={4} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M50 27v44" />
-            <path d="M50 27c-4-7-9-11-14-13M50 27c4-7 9-11 14-13" />
-            <path d="M50 31C44 15 26 9 16 18 7 27 14 42 31 46c8 2 16-7 19-15Z" />
-            <path d="M50 31c6-16 24-22 34-13 9 9 2 24-15 28-8 2-16-7-19-15Z" />
-            <path d="M50 43c-5 12-19 15-24 25-4 9 4 15 11 11 8-5 12-22 13-36Z" />
-            <path d="M50 43c5 12 19 15 24 25 4 9-4 15-11 11-8-5-12-22-13-36Z" />
+          {/* The real mark, straight from the traced logo. Its glow is the
+              radial gradient painted behind it above. */}
+          <svg
+            width={86}
+            height={Math.round((86 * BUTTERFLY_VIEWBOX.h) / BUTTERFLY_VIEWBOX.w)}
+            viewBox={`0 0 ${BUTTERFLY_VIEWBOX.w} ${BUTTERFLY_VIEWBOX.h}`}
+          >
+            <path d={SOLID_PATH} fill="#FF4D8D" />
           </svg>
           <div
             style={{

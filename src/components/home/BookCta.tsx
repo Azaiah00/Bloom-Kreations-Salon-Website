@@ -26,7 +26,7 @@ export default function BookCta() {
 
       <div className="container-page relative text-center">
         <div ref={markRef} className="reveal mx-auto w-40">
-          <Butterfly className="w-full text-rose-lite" draw strokeWidth={1.2} />
+          <Butterfly px={160} animate="weave" neon className="w-full text-rose-lite" />
         </div>
 
         <div className="mt-8 flex items-center justify-center gap-3">

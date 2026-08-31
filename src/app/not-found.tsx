@@ -15,7 +15,7 @@ export default function NotFound() {
   return (
     <section className="py-section">
       <div className="container-page max-w-3xl text-center">
-        <Butterfly className="mx-auto w-20 text-rose" strokeWidth={1.6} />
+        <Butterfly px={80} animate="unfurl" className="mx-auto w-20 text-rose" />
         <Eyebrow className="mt-8">404</Eyebrow>
         <h1 className="mt-4 font-display text-h1 font-black text-ink">
           That page has grown out.

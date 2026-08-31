@@ -47,6 +47,23 @@ bitten this codebase already:
   of `globals.css` and fails on any pair below what `DESIGN.md` promises. Change a
   colour, run it.
 
+## The mark
+
+`src/components/marks/butterfly-paths.ts` is **generated** — traced from the logo artwork. Do not
+hand-edit the path data. `<Butterfly px={n} />` picks one of three variants from the size you
+declare (detail ≥40px, solid ≥22px, silhouette below); the call site does not choose, because a
+line drawing at nav size is the bug that killed the first mark.
+
+Every icon — `favicon.ico`, `icon.svg`, `apple-icon.png`, `public/icon-{192,512,maskable-512}.png`
+and `public/brand/mark-neon.svg` — is produced from those paths by `npm run icons`, with the palette
+read out of `globals.css`. `npm run audit:icons` (inside `verify`) fails if any is stale. **Change
+`butterfly-paths.ts` or a brand colour and you must re-run `npm run icons`.**
+
+Tailwind is scoped with `@import "tailwindcss" source(none)` + `@source "../../src"`. That is
+deliberate: `CLAUDE.md`, `DESIGN.md` and `scripts/check-css.mjs` all quote the broken compound
+arbitrary variant as evidence, and left to scan the whole project Tailwind compiles those quotations
+into real, broken rules. Any new directory that contains classes must be added to `@source`.
+
 ## Motion
 
 Lenis drives scrolling, GSAP ScrollTrigger drives anything tied to scroll position,
@@ -64,11 +81,12 @@ motion must show the same content, never less; `npm run audit:flow` tests it.
 ## Before any handoff
 
 ```bash
-npm run verify         # typecheck + lint + contrast + build + CSS emission
+npm run verify         # typecheck + lint + contrast + icons + build + CSS emission
 # then, with the built site on :3100
 npm run audit:a11y     # rendered-DOM checks across every route at 375 and 1440
 npm run audit:flow     # 13 end-to-end tests
 npm run frames         # look at the pinned sections at real scroll depths
+node scripts/marks.mjs # photograph every butterfly at its real size, ground and scroll depth
 ```
 
 Screenshot before believing anything is done. Every real bug in this build was found

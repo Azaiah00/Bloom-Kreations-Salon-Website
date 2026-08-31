@@ -67,8 +67,8 @@ export default function SiteHeader() {
           aria-label="Bloom Kreations — home"
         >
           <Butterfly
+            px={28}
             className="size-7 text-rose transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:rotate-6 group-hover:scale-110"
-            strokeWidth={2.2}
           />
           <Wordmark className="text-lg text-ink" />
         </Link>

@@ -52,7 +52,7 @@ export default function PortalIndex() {
       <div className="container-page flex min-h-screen flex-col justify-center py-section">
         <div className="mx-auto w-full max-w-4xl">
           <div className="text-center">
-            <Butterfly className="mx-auto w-16 text-rose-lite" strokeWidth={1.8} />
+            <Butterfly px={64} neon animate="unfurl" className="mx-auto w-16 text-rose-lite" />
             <div className="mt-7 flex items-center justify-center gap-3">
               <span className="neon-rule w-10" aria-hidden />
               <Eyebrow tone="studio">Portal</Eyebrow>

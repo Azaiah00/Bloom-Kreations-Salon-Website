@@ -46,7 +46,7 @@ export default function ServicesPreview() {
           </div>
 
           <div ref={markRef} className="reveal hidden shrink-0 lg:block">
-            <Butterfly className="w-28 text-rose" draw strokeWidth={1.3} />
+            <Butterfly px={112} animate="weave" className="w-28 text-rose" />
           </div>
         </div>
 

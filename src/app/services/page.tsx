@@ -47,7 +47,7 @@ export default function ServicesPage() {
                 &ldquo;call for pricing&rdquo;.
               </p>
             </div>
-            <Butterfly className="hidden w-24 shrink-0 text-rose lg:block" strokeWidth={1.6} />
+            <Butterfly px={96} animate="unfurl" className="hidden w-24 shrink-0 text-rose lg:block" />
           </div>
 
           <dl className="mt-12 grid grid-cols-2 gap-6 border-y border-sand py-8 sm:grid-cols-4">

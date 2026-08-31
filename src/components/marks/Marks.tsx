@@ -21,61 +21,12 @@ function pathClass(draw?: boolean) {
 }
 
 /**
- * The primary mark. Used in the nav, the footer, and as a section ornament.
- *
- * Drawn to stay legible down to 22px: four wings, a slim body and two dotted
- * antennae, and nothing else. An earlier version carried wing detail that
- * collapsed into a blob at nav size — verified at 22 / 28 / 40 / 80 / 160px.
+ * The primary mark now lives in ./Butterfly — it is traced from the real logo
+ * artwork, has two size variants and its own scroll animations, so it needs to
+ * be a client component. Re-exported here so every existing import keeps working.
  */
-export function Butterfly({
-  className,
-  draw,
-  strokeWidth = 1.5,
-  title,
-}: MarkProps) {
-  return (
-    <svg
-      viewBox="0 0 100 90"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      role={title ? "img" : "presentation"}
-      aria-label={title}
-      aria-hidden={title ? undefined : true}
-    >
-      {/* Body */}
-      <path className={pathClass(draw)} d="M50 27v44" />
-      {/* Antennae */}
-      <path
-        className={pathClass(draw)}
-        d="M50 27c-4-7-9-11-14-13M50 27c4-7 9-11 14-13"
-      />
-      <circle className={pathClass(draw)} cx="35" cy="13" r="1.8" />
-      <circle className={pathClass(draw)} cx="65" cy="13" r="1.8" />
-      {/* Upper wings */}
-      <path
-        className={pathClass(draw)}
-        d="M50 31C44 15 26 9 16 18 7 27 14 42 31 46c8 2 16-7 19-15Z"
-      />
-      <path
-        className={pathClass(draw)}
-        d="M50 31c6-16 24-22 34-13 9 9 2 24-15 28-8 2-16-7-19-15Z"
-      />
-      {/* Lower wings */}
-      <path
-        className={pathClass(draw)}
-        d="M50 43c-5 12-19 15-24 25-4 9 4 15 11 11 8-5 12-22 13-36Z"
-      />
-      <path
-        className={pathClass(draw)}
-        d="M50 43c5 12 19 15 24 25 4 9-4 15-11 11-8-5-12-22-13-36Z"
-      />
-    </svg>
-  );
-}
+export { default as Butterfly } from "./Butterfly";
+export type { ButterflyAnimation } from "./Butterfly";
 
 /**
  * A bloom opening — used on the loc-journey rail and as a section divider.

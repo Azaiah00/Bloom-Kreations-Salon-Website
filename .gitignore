@@ -10,10 +10,8 @@ npm-debug.log*
 .vercel
 next-env.d.ts
 /coverage
-
-# Windows / OneDrive noise
-desktop.ini
-Thumbs.db
-
-# Next.js writes this on every dev run
 tsconfig.tsbuildinfo
+
+# OneDrive
+desktop.ini
+_sync/
