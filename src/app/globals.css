@@ -225,22 +225,16 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
   }
 
-  /* Marquee. Duration is set inline; direction flips via a CSS variable that
-     the scroll-velocity hook writes to. */
+  /* Marquee. Layout only — GSAP owns the transform.
+     This used to be a CSS animation whose duration the scroll hook rewrote on
+     every frame. Changing `animation-duration` on a running animation re-maps
+     elapsed time onto the new duration, so the element SNAPS to a new position
+     — 40px in a single frame, measured. That was the visible glitch. Speed is
+     now an eased GSAP timeScale, which changes rate without moving anything. */
   .marquee-track {
     display: flex;
     width: max-content;
-    animation: bk-marquee var(--marquee-duration, 40s) linear infinite;
-    animation-direction: var(--marquee-direction, normal);
-  }
-
-  @keyframes bk-marquee {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(-50%, 0, 0);
-    }
+    will-change: transform;
   }
 
   /* Demo switcher panel. Rises from the button it opens off. */
@@ -287,7 +281,8 @@
     transform: none !important;
   }
 
-  .marquee-track,
+  /* The marquee is a GSAP tween that never starts under reduced motion, so
+     only .drift needs stopping here. The band still shows every word. */
   .drift {
     animation: none !important;
   }

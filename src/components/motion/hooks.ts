@@ -366,32 +366,65 @@ function formatCount(node: HTMLElement) {
 /* -------------------------------------------------------------------------- */
 
 export function useVelocityMarquee<T extends HTMLElement>(
-  ref: RefObject<T | null>,
+  sectionRef: RefObject<T | null>,
+  trackRef: RefObject<HTMLElement | null>,
   baseSeconds = 44
 ) {
   useGsapEffect(() => {
-    const el = ref.current;
-    if (!el || prefersReduced()) return;
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track || prefersReduced()) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: "top bottom",
-      end: "bottom top",
-      onUpdate: (self) => {
-        const v = self.getVelocity();
-        // Faster scroll tightens the loop; scrolling up flips it.
-        const speedUp = gsap.utils.clamp(0.25, 1, 1 - Math.abs(v) / 6000);
-        el.style.setProperty("--marquee-duration", `${baseSeconds * speedUp}s`);
-        if (Math.abs(v) > 40) {
-          el.style.setProperty("--marquee-direction", v < 0 ? "reverse" : "normal");
-        }
-      },
-    });
+    const ctx = gsap.context(() => {
+      // The track holds the list twice, so -50% is exactly one copy and the
+      // seam never shows. The wrap modifier keeps that true when timeScale
+      // goes negative and the tween runs backwards past its own start.
+      const wrap = gsap.utils.wrap(-50, 0);
+      gsap.set(track, { xPercent: 0 });
 
-    return () => st.kill();
-  }, [ref, baseSeconds]);
+      const tween = gsap.to(track, {
+        xPercent: -50,
+        duration: baseSeconds,
+        ease: "none",
+        repeat: -1,
+        modifiers: { xPercent: (v: string) => wrap(parseFloat(v)) },
+      });
+
+      let target = 1;
+
+      const st = ScrollTrigger.create({
+        trigger: section,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: (self) => {
+          const v = self.getVelocity();
+          const boost = gsap.utils.clamp(1, 3.6, 1 + Math.abs(v) / 1400);
+          target = (v < 0 ? -1 : 1) * boost;
+        },
+      });
+
+      // timeScale is eased toward the target every frame rather than assigned.
+      // A step change in speed is a visible lurch even though it never moves
+      // the element — and once scrolling stops, ScrollTrigger stops firing, so
+      // the decay here is what returns the band to its resting drift.
+      const drift = () => {
+        const rest = target >= 0 ? 1 : -1;
+        target += (rest - target) * 0.05;
+        tween.timeScale(tween.timeScale() + (target - tween.timeScale()) * 0.09);
+      };
+      gsap.ticker.add(drift);
+
+      return () => {
+        gsap.ticker.remove(drift);
+        st.kill();
+        tween.kill();
+      };
+    }, section);
+
+    return () => ctx.revert();
+  }, [sectionRef, trackRef, baseSeconds]);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -157,7 +157,7 @@ One signature move per section, never two.
 | Section | Move |
 |---|---|
 | Hero | Headline words rise and un-blur on load; portrait plate parallaxes at `y: -12%`; scroll cue fades out over the first 400px |
-| Marquee | Continuous ticker whose direction and speed are driven by scroll velocity |
+| Marquee | Continuous ticker whose direction and speed are driven by scroll velocity — a GSAP tween with an eased `timeScale`, never a CSS animation with a rewritten duration (see CLAUDE.md) |
 | Signature marks | Butterfly rope segments **weave** outward from the body, staggered 25ms; bloom/crown line art draws itself (`stroke-dashoffset` scrubbed) |
 | Loc Journey | **Pinned** section; four stages scrub horizontally, progress rail fills |
 | Services | Cards stagger up 24px with a 60ms offset as the grid crosses 85% viewport |

@@ -78,6 +78,19 @@ query the motion uses. If those two disagree the section clips — that is how
 Everything honours `prefers-reduced-motion` by jumping to the finished state. Reduced
 motion must show the same content, never less; `npm run audit:flow` tests it.
 
+## The marquee is a tween, not a CSS animation
+
+Speed used to be expressed by writing `--marquee-duration` on every scroll frame. The
+browser re-maps elapsed time onto the new duration, so the track **snaps** — measured at
+40.6px in a single frame, 8 jumps over 12px across 90 frames. That was the band visibly
+glitching on scroll, on both mobile and desktop. It is now one infinite GSAP tween whose
+`timeScale` is eased toward a velocity-derived target; timeScale changes the rate without
+moving anything, and going negative reverses smoothly instead of mirroring the position.
+
+Never express motion speed by mutating `animation-duration` or `animation-direction` on a
+running animation. `npm run audit:flow` fails if `.marquee-track` reports more than one
+`animation-duration`, or if any frame moves it more than 12px. Proven in both directions.
+
 ## The demo switcher
 
 `src/components/site/DemoSwitcher.tsx`, mounted in the root layout, is the bottom-left
@@ -118,7 +131,7 @@ fails two tests and reports the exception.
 npm run verify         # typecheck + lint + contrast + icons + build + CSS emission
 # then, with the built site on :3100
 npm run audit:a11y     # rendered-DOM checks across every route at 375 and 1440
-npm run audit:flow     # 17 end-to-end tests; fails on any uncaught page error
+npm run audit:flow     # 18 end-to-end tests; fails on any uncaught page error
 npm run frames         # look at the pinned sections at real scroll depths
 node scripts/marks.mjs # photograph every butterfly at its real size, ground and scroll depth
 ```

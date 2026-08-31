@@ -238,6 +238,76 @@ await check("leaving a pinned page by link throws nothing", async () => {
   }
 });
 
+/* --- Marquee smoothness ------------------------------------------------- */
+
+/**
+ * Regression guard, and the reason the band is a GSAP tween rather than a CSS
+ * animation. Speed used to be expressed by rewriting `animation-duration` on
+ * every scroll frame; the browser re-maps elapsed time onto the new duration,
+ * so the track SNAPS. Measured at 40.6px in a single frame with 8 jumps over
+ * 12px across 90 frames, which is what "the banner glitches when I scroll"
+ * was. Eased `timeScale` changes rate without moving anything.
+ */
+await check("the marquee never jumps while scrolling", async () => {
+  for (const vp of [{ width: 1440, height: 900 }, { width: 375, height: 812 }]) {
+    await page.setViewportSize(vp);
+    await page.goto(BASE + "/", { waitUntil: "load" });
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(1200);
+
+    const r = await page.evaluate(async () => {
+      const track = document.querySelector(".marquee-track");
+      if (!track) return { error: "no .marquee-track" };
+      const x = () => new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
+      const durations = new Set();
+      const xs = [];
+      // Down hard, up hard, down again. The reversal was the worst case.
+      const plan = [
+        ...Array(40).fill(30),
+        ...Array(40).fill(-40),
+        ...Array(30).fill(25),
+      ];
+      let i = 0;
+      await new Promise((done) => {
+        const tick = () => {
+          xs.push(x());
+          durations.add(getComputedStyle(track).animationDuration);
+          if (i < plan.length) {
+            window.scrollBy(0, plan[i]);
+            i++;
+            requestAnimationFrame(tick);
+          } else if (xs.length < plan.length + 40) requestAnimationFrame(tick);
+          else done();
+        };
+        requestAnimationFrame(tick);
+      });
+      const deltas = [];
+      for (let k = 1; k < xs.length; k++) deltas.push(Math.abs(xs[k] - xs[k - 1]));
+      deltas.sort((a, b) => b - a);
+      return {
+        max: deltas[0],
+        over12: deltas.filter((d) => d > 12).length,
+        moved: Math.abs(xs[xs.length - 1] - xs[0]) > 1,
+        distinctDurations: durations.size,
+      };
+    });
+
+    if (r.error) throw new Error(r.error);
+    if (!r.moved) throw new Error(`marquee never moved at ${vp.width}px`);
+    if (r.distinctDurations > 1) {
+      throw new Error(
+        `animation-duration is being rewritten (${r.distinctDurations} values) — that snaps the track`
+      );
+    }
+    if (r.over12 > 0) {
+      throw new Error(
+        `${r.over12} frame(s) jumped more than 12px at ${vp.width}px (worst ${r.max.toFixed(1)}px)`
+      );
+    }
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+});
+
 /* --- Demo switcher ------------------------------------------------------ */
 
 await check("demo switcher reaches every portal sign-in", async () => {

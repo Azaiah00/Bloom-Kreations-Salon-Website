@@ -8,9 +8,15 @@ import { Butterfly } from "@/components/marks/Marks";
  * Scroll-velocity ticker. Speeds up as you scroll and reverses when you scroll
  * back up, so the band reacts to the reader rather than looping obliviously.
  *
- * The list is duplicated once and the keyframe translates -50%, which is what
+ * The list is duplicated once and the track translates -50%, which is what
  * makes the loop seamless. `aria-hidden` on the copy keeps it out of the
  * accessibility tree.
+ *
+ * The motion is a GSAP tween whose timeScale is eased, NOT a CSS animation
+ * whose duration is rewritten. Changing `animation-duration` on a running
+ * animation re-maps elapsed time onto the new duration and snaps the element
+ * to a different position — measured at up to 40px in a single frame, which is
+ * what the band visibly glitching on scroll actually was.
  */
 
 const WORDS = [
@@ -30,7 +36,8 @@ const WORDS = [
 
 export default function Marquee() {
   const ref = useRef<HTMLDivElement>(null);
-  useVelocityMarquee(ref, 46);
+  const trackRef = useRef<HTMLDivElement>(null);
+  useVelocityMarquee(ref, trackRef, 46);
 
   return (
     <div
@@ -38,7 +45,7 @@ export default function Marquee() {
       className="studio relative overflow-hidden border-y border-copper/25 py-5"
       aria-label="Services offered at Bloom Kreations"
     >
-      <div className="marquee-track">
+      <div ref={trackRef} className="marquee-track">
         {[0, 1].map((copy) => (
           <ul
             key={copy}
