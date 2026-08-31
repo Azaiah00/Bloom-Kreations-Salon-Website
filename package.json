@@ -13,7 +13,8 @@
     "audit:flow": "node scripts/flow.mjs",
     "shots": "node scripts/shots.mjs",
     "frames": "node scripts/frames.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run audit:contrast && npm run build"
+    "verify": "npm run typecheck && npm run lint && npm run audit:contrast && npm run build && npm run audit:css",
+    "audit:css": "node scripts/check-css.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",

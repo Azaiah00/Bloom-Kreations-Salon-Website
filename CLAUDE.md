@@ -30,10 +30,19 @@ anything factual. Both are binding, not advisory.
 `DESIGN.md` holds the tokens and the measured contrast table. Two things that have
 bitten this codebase already:
 
-- **Tailwind v4 has no arbitrary-property shorthand for theme variables.**
-  `rounded-[--radius-pill]` silently does nothing. Because the values are declared in
-  `@theme`, the utilities are `rounded-pill`, `rounded-card`, `rounded-media`,
-  `rounded-sheet`, `bg-rose`, `text-honey`, `py-section`.
+- **Tailwind v4 fails silently, twice over.** It has no arbitrary-property shorthand for
+  theme variables — `rounded-[--radius-pill]` does nothing; the utilities are
+  `rounded-pill`, `rounded-card`, `rounded-media`, `rounded-sheet`, `bg-rose`,
+  `text-honey`, `py-section`. And it drops **compound arbitrary media queries**:
+  `[@media(min-width:1024px)and(min-height:820px)]:h-screen` compiles clean and emits
+  no rule at all. Both pinned sections shipped ungated because of that. Compound
+  queries go through `@custom-variant` at the top of `globals.css` — `pin:`, `rail:`,
+  `rail-xl:` — and nothing else.
+- **`npm run audit:css` is what makes those failures loud.** It reads the built CSS and
+  fails if any declared `@custom-variant`, brand colour or radius token never reached
+  the output, and rejects arbitrary `[@media(...)]` variants on sight. `tsc`, `eslint`,
+  `next build` and the rendered-DOM audit all passed while the gate did not exist —
+  none of them check whether a class produces a rule.
 - **Contrast is measured.** `npm run audit:contrast` reads the hex values straight out
   of `globals.css` and fails on any pair below what `DESIGN.md` promises. Change a
   colour, run it.
@@ -55,7 +64,7 @@ motion must show the same content, never less; `npm run audit:flow` tests it.
 ## Before any handoff
 
 ```bash
-npm run verify         # typecheck + lint + contrast + build
+npm run verify         # typecheck + lint + contrast + build + CSS emission
 # then, with the built site on :3100
 npm run audit:a11y     # rendered-DOM checks across every route at 375 and 1440
 npm run audit:flow     # 13 end-to-end tests

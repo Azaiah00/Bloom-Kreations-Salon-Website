@@ -102,10 +102,19 @@ bottom, never anything else.
 | `--radius-media` | `1.75rem` | Images, video, map |
 | `--radius-sheet` | `2.5rem` | Full-bleed rounded sections |
 
-> **Tailwind v4 note (this cost the last build every button on the site):** v4 has no arbitrary-property
-> shorthand for theme variables. `rounded-[--radius-pill]` silently does nothing. Because these are
-> declared in `@theme`, the correct utilities are `rounded-pill`, `rounded-card`, `rounded-media`,
-> `rounded-sheet`. Same for colours: `bg-rose`, not `bg-[--color-rose]`.
+> **Tailwind v4 note — it fails silently in two different ways, and both have bitten this project.**
+>
+> 1. No arbitrary-property shorthand for theme variables. `rounded-[--radius-pill]` does nothing.
+>    Because these are declared in `@theme`, the utilities are `rounded-pill`, `rounded-card`,
+>    `rounded-media`, `rounded-sheet`. Same for colours: `bg-rose`, not `bg-[--color-rose]`.
+> 2. **Compound arbitrary media queries are dropped entirely.**
+>    `[@media(min-width:1024px)and(min-height:820px)]:h-screen` compiles without a warning and emits
+>    no rule, so both pinned sections shipped with no height gate at all. Compound queries are
+>    declared once as `@custom-variant` at the top of `globals.css` and used as `pin:`, `rail:`,
+>    `rail-xl:`.
+>
+> `npm run audit:css` fails the build on either mistake — it reads the *built* CSS rather than
+> trusting that a class did something.
 
 Elevation is warm, never grey: `--shadow-soft: 0 1px 2px rgb(65 43 26 / .06), 0 12px 32px -12px rgb(65 43 26 / .18)`.
 On studio surfaces, elevation is a rose glow instead: `--shadow-glow: 0 0 0 1px rgb(255 61 127 / .22), 0 18px 60px -22px rgb(255 61 127 / .45)`.
