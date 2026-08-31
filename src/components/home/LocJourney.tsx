@@ -42,9 +42,9 @@ export default function LocJourney() {
       ref={section}
       id="loc-journey"
       aria-labelledby="journey-title"
-      className="studio grain relative overflow-hidden [@media(min-width:1024px)and(min-height:820px)]:h-screen"
+      className="studio grain relative overflow-hidden pin:h-screen"
     >
-      <div className="flex h-full flex-col justify-center py-section [@media(min-width:1024px)and(min-height:820px)]:py-0 [@media(min-width:1024px)and(min-height:820px)]:pb-8 [@media(min-width:1024px)and(min-height:820px)]:pt-[calc(4.5rem+1.25rem)]">
+      <div className="flex h-full flex-col justify-center py-section pin:py-0 pin:pb-8 pin:pt-[calc(4.5rem+1.25rem)]">
         {/* Header. Laid out in two columns on desktop rather than stacked —
             a pinned section only has one viewport of height to spend, and the
             cards need most of it. */}
@@ -83,7 +83,7 @@ export default function LocJourney() {
           </div>
 
           {/* Progress rail */}
-          <div className="mt-6 hidden [@media(min-width:1024px)and(min-height:820px)]:block">
+          <div className="mt-6 hidden pin:block">
             <div className="h-px w-full bg-copper/40">
               <div
                 className="h-px bg-rose-lite transition-[width] duration-150 ease-linear"
@@ -107,17 +107,17 @@ export default function LocJourney() {
         </div>
 
         {/* Track */}
-        <div className="mt-10 overflow-hidden [@media(min-width:1024px)and(min-height:820px)]:mt-7">
+        <div className="mt-10 overflow-hidden pin:mt-7">
           <div
             ref={track}
-            className="flex flex-col gap-8 px-[var(--spacing-gutter)] [@media(min-width:1024px)and(min-height:820px)]:w-max [@media(min-width:1024px)and(min-height:820px)]:flex-row [@media(min-width:1024px)and(min-height:820px)]:gap-8 [@media(min-width:1024px)and(min-height:820px)]:px-[max(var(--spacing-gutter),calc((100vw-84rem)/2+var(--spacing-gutter)))]"
+            className="flex flex-col gap-8 px-[var(--spacing-gutter)] pin:w-max pin:flex-row pin:gap-8 pin:px-[max(var(--spacing-gutter),calc((100vw-84rem)/2+var(--spacing-gutter)))]"
           >
             {LOC_STAGES.map((s, i) => (
               <StageCard key={s.id} stage={s} index={i} active={i === activeIndex} />
             ))}
 
             {/* Closing card — the argument the whole section builds to. */}
-            <article className="flex w-full shrink-0 flex-col justify-center rounded-sheet border border-rose-lite/40 bg-studio-2 p-8 [@media(min-width:1024px)and(min-height:820px)]:w-[29rem] [@media(min-width:1024px)and(min-height:820px)]:p-6">
+            <article className="flex w-full shrink-0 flex-col justify-center rounded-sheet border border-rose-lite/40 bg-studio-2 p-8 pin:w-[29rem] pin:p-6">
               <Eyebrow tone="studio">Why it matters</Eyebrow>
               <p className="mt-4 font-display text-h3 font-black text-bone">
                 Locs are the one service where changing chairs costs you.
@@ -153,7 +153,7 @@ function StageCard({
     <article
       id={stage.id}
       className={cn(
-        "w-full shrink-0 rounded-sheet border p-7 transition-colors duration-500 [@media(min-width:1024px)and(min-height:820px)]:w-[29rem] [@media(min-width:1024px)and(min-height:820px)]:p-6",
+        "w-full shrink-0 rounded-sheet border p-7 transition-colors duration-500 pin:w-[29rem] pin:p-6",
         active
           ? "border-rose-lite/50 bg-studio-2"
           : "border-copper/30 bg-studio-2/50"

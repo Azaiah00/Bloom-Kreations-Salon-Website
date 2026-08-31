@@ -26,9 +26,9 @@ export default function GalleryRail() {
     <section
       ref={section}
       aria-labelledby="gallery-rail-title"
-      className="studio grain relative overflow-hidden [@media(min-width:768px)and(min-height:700px)]:h-screen"
+      className="studio grain relative overflow-hidden rail:h-screen"
     >
-      <div className="flex h-full flex-col justify-center py-section [@media(min-width:768px)and(min-height:700px)]:py-0 [@media(min-width:768px)and(min-height:700px)]:pb-8 [@media(min-width:768px)and(min-height:700px)]:pt-[calc(4.5rem+1.5rem)]">
+      <div className="flex h-full flex-col justify-center py-section rail:py-0 rail:pb-8 rail:pt-[calc(4.5rem+1.5rem)]">
         <div className="container-page shrink-0">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
@@ -62,10 +62,10 @@ export default function GalleryRail() {
           </div>
         </div>
 
-        <div className="mt-10 [@media(min-width:768px)and(min-height:700px)]:mt-8">
+        <div className="mt-10 rail:mt-8">
           <div
             ref={track}
-            className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--spacing-gutter)] pb-4 [@media(min-width:768px)and(min-height:700px)]:w-max [@media(min-width:768px)and(min-height:700px)]:snap-none [@media(min-width:768px)and(min-height:700px)]:gap-6 [@media(min-width:768px)and(min-height:700px)]:overflow-visible [@media(min-width:768px)and(min-height:700px)]:pb-0"
+            className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--spacing-gutter)] pb-4 rail:w-max rail:snap-none rail:gap-6 rail:overflow-visible rail:pb-0"
           >
             {RAIL.map((shot, i) => {
               const svc = shot.serviceId ? getService(shot.serviceId) : undefined;
@@ -73,7 +73,7 @@ export default function GalleryRail() {
                 <figure
                   key={shot.slug}
                   data-gallery-tile
-                  className="group relative w-[72vw] shrink-0 snap-center sm:w-[48vw] [@media(min-width:768px)and(min-height:700px)]:w-[21rem] [@media(min-width:1280px)and(min-height:700px)]:w-[23rem]"
+                  className="group relative w-[72vw] shrink-0 snap-center sm:w-[48vw] rail:w-[21rem] rail-xl:w-[23rem]"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden rounded-sheet bg-studio-2">
                     <Image
@@ -115,7 +115,7 @@ export default function GalleryRail() {
               );
             })}
 
-            <div className="flex w-[72vw] shrink-0 snap-center items-center sm:w-[48vw] [@media(min-width:768px)and(min-height:700px)]:w-[21rem]">
+            <div className="flex w-[72vw] shrink-0 snap-center items-center sm:w-[48vw] rail:w-[21rem]">
               <div className="w-full rounded-sheet border border-rose-lite/40 bg-studio-2 p-8">
                 <p className="font-display text-h3 font-black text-bone">
                   Eighteen more sets in the gallery.

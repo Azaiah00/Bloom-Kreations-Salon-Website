@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/*
+ * Pinned-section viewport gates — must match PIN_QUERY and RAIL_QUERY in
+ * src/components/motion/hooks.ts. Arbitrary [@media(...)] classes break
+ * Tailwind v4's CSS parser on compound queries; named variants do not.
+ */
+@custom-variant pin (@media (min-width: 1024px) and (min-height: 820px));
+@custom-variant rail (@media (min-width: 768px) and (min-height: 700px));
+@custom-variant rail-xl (@media (min-width: 1280px) and (min-height: 700px));
+
 /* ============================================================================
    Bloom Kreations — design tokens.
    Every value here is documented in DESIGN.md. Do not introduce a colour, radius
