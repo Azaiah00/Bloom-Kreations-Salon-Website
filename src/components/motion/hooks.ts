@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -14,6 +14,20 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  *   - and no-ops under prefers-reduced-motion, leaving the element in its
  *     finished state so the content is identical either way.
  */
+
+/**
+ * GSAP cleanup has to run BEFORE React detaches the DOM, not after.
+ *
+ * `pin: true` makes ScrollTrigger wrap the pinned element in a `pin-spacer`
+ * div of its own. With a passive `useEffect`, React removes the subtree first
+ * and the context reverts into nodes that are no longer where it left them —
+ * every client-side navigation away from the pinned home page died with
+ * "Failed to execute 'removeChild' on 'Node'". A layout effect's cleanup runs
+ * synchronously before the removal, which is why GSAP's own React helper uses
+ * one. Falls back to useEffect on the server, where layout effects warn.
+ */
+const useGsapEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 /**
  * Viewport conditions under which a section may pin. Both are exported so the
@@ -49,7 +63,7 @@ export function useReveal<T extends HTMLElement>(
   ref: RefObject<T | null>,
   { stagger = 0.06, start = "top 85%" } = {}
 ) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const scope = ref.current;
     if (!guard(scope)) return;
 
@@ -76,7 +90,7 @@ export function useReveal<T extends HTMLElement>(
 /* -------------------------------------------------------------------------- */
 
 export function useHero<T extends HTMLElement>(ref: RefObject<T | null>) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const scope = ref.current;
     if (!guard(scope)) return;
 
@@ -126,7 +140,7 @@ export function useDrawOnScroll<T extends HTMLElement>(
   ref: RefObject<T | null>,
   { start = "top 80%", end = "bottom 55%" } = {}
 ) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const scope = ref.current;
     if (!guard(scope)) return;
 
@@ -174,7 +188,7 @@ export function usePinnedTrack<T extends HTMLElement>(
   trackRef: RefObject<HTMLElement | null>,
   onProgress?: (p: number) => void
 ) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!guard(section) || !track) return;
@@ -232,7 +246,7 @@ export function useHorizontalGallery<T extends HTMLElement>(
   sectionRef: RefObject<T | null>,
   trackRef: RefObject<HTMLElement | null>
 ) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!guard(section) || !track) return;
@@ -300,7 +314,7 @@ export function useHorizontalGallery<T extends HTMLElement>(
 /* -------------------------------------------------------------------------- */
 
 export function useCountUp<T extends HTMLElement>(ref: RefObject<T | null>) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const scope = ref.current;
     if (!scope) return;
 
@@ -355,7 +369,7 @@ export function useVelocityMarquee<T extends HTMLElement>(
   ref: RefObject<T | null>,
   baseSeconds = 44
 ) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const el = ref.current;
     if (!el || prefersReduced()) return;
 
@@ -388,7 +402,7 @@ export function useGroundShift<T extends HTMLElement>(
   ref: RefObject<T | null>,
   color = "#120c0d"
 ) {
-  useEffect(() => {
+  useGsapEffect(() => {
     const scope = ref.current;
     if (!guard(scope)) return;
 

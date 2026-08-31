@@ -83,6 +83,12 @@ These are flagged on the site itself (a "needs confirming" note on the service c
 - **Source artwork.** Keep the original logo PNGs. The trace can be regenerated
   (`logo/silhouette.py` and the tracing notes in `logo/`), but only from the raster
   originals — they are the master, not the SVG.
+- **Portal accounts.** There are none, and nothing on the site pretends otherwise. The
+  bottom-left **Demo** button opens every portal screen directly — the owner dashboard
+  and four demo clients, one per loc stage, so the difference between a one-month client
+  and a three-year client is visible rather than described. Demo clients all carry the
+  surname "Sample" and every portal screen is banded "Demo". If real accounts are agreed,
+  the switcher is deleted, not adapted.
 - **Domain.** The build assumes `bloomkreations.com`. Change `SITE` in
   `src/lib/schema.ts` and `metadataBase` in `src/app/layout.tsx` if it differs.
 

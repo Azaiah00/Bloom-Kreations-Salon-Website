@@ -20,8 +20,12 @@ async function check(name, fn) {
 
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
+// Uncaught exceptions are kept apart from console noise because they FAIL the
+// run. A page that throws while still rendering something passes every other
+// gate in this repo, which is exactly how the pinned-navigation bug shipped.
+const pageErrors = [];
 const consoleErrors = [];
-page.on("pageerror", (e) => consoleErrors.push(e.message));
+page.on("pageerror", (e) => pageErrors.push(e.message));
 page.on("console", (m) => m.type() === "error" && consoleErrors.push(m.text()));
 
 /* --- Booking, all five steps ------------------------------------------- */
@@ -203,6 +207,92 @@ await check("reduced motion still shows every section", async () => {
   await rm.close();
 });
 
+/* --- Client-side navigation off the pinned pages ------------------------ */
+
+/**
+ * Regression guard. `pin: true` makes ScrollTrigger wrap the pinned element in
+ * a spacer div of its own; with a passive effect, React tore the subtree down
+ * before GSAP could put it back, and EVERY client-side navigation away from the
+ * home page died with "Failed to execute 'removeChild' on 'Node'" — sometimes
+ * rendering the error boundary instead of the page. Typecheck, lint, build,
+ * contrast, CSS emission and the rendered-DOM audit all passed while that was
+ * live, because none of them click a link.
+ */
+await check("leaving a pinned page by link throws nothing", async () => {
+  for (const [from, linkName] of [
+    ["/", "Services"],
+    ["/", "Gallery"],
+    ["/loc-journey", "Services"],
+    ["/gallery", "About"],
+  ]) {
+    await page.goto(BASE + from, { waitUntil: "load" });
+    await page.waitForTimeout(1200);
+    const before = pageErrors.length;
+    await page.getByRole("navigation").getByRole("link", { name: linkName }).first().click();
+    await page.waitForTimeout(1500);
+    if (pageErrors.length > before) {
+      throw new Error(`${from} -> ${linkName} threw: ${pageErrors[before]}`);
+    }
+    const h1 = await page.locator("h1").first().innerText();
+    if (/couldn|error/i.test(h1)) throw new Error(`${from} -> ${linkName} hit the error boundary`);
+  }
+});
+
+/* --- Demo switcher ------------------------------------------------------ */
+
+await check("demo switcher reaches every portal sign-in", async () => {
+  const want = [
+    [/Owner dashboard/, "/portal/owner", /Your book/],
+    [/Ava Sample/, "/portal/client?as=c-demo", /Ava/],
+    [/Nia Sample/, "/portal/client?as=c-2", /Nia/],
+    [/Rae Sample/, "/portal/client?as=c-3", /Rae/],
+    [/Kim Sample/, "/portal/client?as=c-4", /Kim/],
+    [/Role picker/, "/portal", /Two sides/],
+    [/Booking flow/, "/book", /Five steps/],
+  ];
+
+  await page.goto(BASE + "/", { waitUntil: "load" });
+  await page.waitForTimeout(1200);
+
+  for (const [name, url, heading] of want) {
+    const before = pageErrors.length;
+    await page.getByRole("button", { name: "Demo" }).click();
+    await page.waitForTimeout(400);
+    await page.getByRole("link", { name }).click();
+    await page.waitForTimeout(1500);
+
+    if (!page.url().endsWith(url)) throw new Error(`${name} went to ${page.url()}, wanted ${url}`);
+    const h1 = await page.locator("h1").first().innerText();
+    if (!heading.test(h1)) throw new Error(`${name} landed on "${h1.replace(/\n/g, " ")}"`);
+    if (pageErrors.length > before) throw new Error(`${name} threw: ${pageErrors[before]}`);
+  }
+});
+
+await check("each demo client shows its own loc journey", async () => {
+  // The whole point of four sign-ins is that the portal looks different at one
+  // month than at three years. If they all render the same timeline, the demo
+  // is showing one screen four times.
+  const counts = {};
+  for (const id of ["c-demo", "c-2", "c-3", "c-4"]) {
+    await page.goto(`${BASE}/portal/client?as=${id}`, { waitUntil: "load" });
+    await page.waitForTimeout(1000);
+    counts[id] = await page.locator("ol li h3").count();
+    if (counts[id] === 0) throw new Error(`${id} has an empty journey`);
+  }
+  if (new Set(Object.values(counts)).size === 1) {
+    throw new Error(`every client shows the same journey length (${JSON.stringify(counts)})`);
+  }
+});
+
+await check("an unknown ?as= falls back rather than throwing", async () => {
+  const before = pageErrors.length;
+  await page.goto(`${BASE}/portal/client?as=not-a-real-client`, { waitUntil: "load" });
+  await page.waitForTimeout(900);
+  if (pageErrors.length > before) throw new Error("threw on an unknown client id");
+  const h1 = await page.locator("h1").first().innerText();
+  if (!/Ava/.test(h1)) throw new Error(`fell back to "${h1}" instead of the default client`);
+});
+
 /* --- No-JS -------------------------------------------------------------- */
 
 await check("content is present with JavaScript disabled", async () => {
@@ -221,9 +311,17 @@ await browser.close();
 console.log("\n=== FLOW TESTS ===");
 pass.forEach((p) => console.log("  PASS  " + p));
 fails.forEach((f) => console.log("  FAIL  " + f));
-if (consoleErrors.length) {
-  console.log("\n  Console/page errors seen:");
-  [...new Set(consoleErrors)].forEach((e) => console.log("   ! " + e.slice(0, 160)));
+const uniquePageErrors = [...new Set(pageErrors)];
+if (uniquePageErrors.length) {
+  console.log("\n  UNCAUGHT PAGE ERRORS (these fail the run):");
+  uniquePageErrors.forEach((e) => console.log("   ! " + e.slice(0, 200)));
 }
-console.log(`\n  ${pass.length} passed, ${fails.length} failed\n`);
-if (fails.length) process.exitCode = 1;
+if (consoleErrors.length) {
+  console.log("\n  Console errors seen:");
+  [...new Set(consoleErrors)].forEach((e) => console.log("   - " + e.slice(0, 160)));
+}
+console.log(
+  `\n  ${pass.length} passed, ${fails.length} failed` +
+    `${uniquePageErrors.length ? `, ${uniquePageErrors.length} uncaught page error(s)` : ""}\n`
+);
+if (fails.length || uniquePageErrors.length) process.exitCode = 1;

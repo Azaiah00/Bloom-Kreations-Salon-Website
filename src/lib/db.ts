@@ -151,53 +151,59 @@ export function stage(id: LocStageId): LocStage {
 /* ========================================================================== */
 
 /**
- * Demo clients. Names are deliberately generic placeholders so nobody mistakes
- * them for her real clients, and the portal labels the whole surface "Demo".
+ * Demo clients. Every surname is "Sample" so nobody can mistake them for her
+ * real clients, and the portal labels the whole surface "Demo" besides. First
+ * names differ because the client dashboard greets people by first name, and
+ * four people called "Sample" would make the demo unreadable.
+ *
+ * One client per loc stage, on purpose: the client portal looks like a
+ * different product at one month than at three years, and the demo switcher
+ * exists to show exactly that.
  */
 const seedClients: Client[] = [
   {
     id: "c-demo",
-    name: "Demo Client",
-    email: "demo@bloomkreations.example",
+    name: "Ava Sample",
+    email: "ava@bloomkreations.example",
     phone: "(773) 555-0142",
     stage: "teen",
     since: "2024-11-02",
     loyaltyVisits: 9,
     notes: "Sensitive at the temples. Prefers a looser retwist at the front.",
-    avatarInitials: "DC",
+    avatarInitials: "AS",
   },
   {
     id: "c-2",
-    name: "Sample Client Two",
-    email: "two@bloomkreations.example",
+    name: "Nia Sample",
+    email: "nia@bloomkreations.example",
     phone: "(773) 555-0119",
     stage: "budding",
     since: "2025-09-14",
     loyaltyVisits: 4,
     notes: "Started locs here. Booked in every five weeks.",
-    avatarInitials: "SC",
+    avatarInitials: "NS",
   },
   {
     id: "c-3",
-    name: "Sample Client Three",
-    email: "three@bloomkreations.example",
+    name: "Rae Sample",
+    email: "rae@bloomkreations.example",
     phone: "(773) 555-0177",
     stage: "mature",
     since: "2023-03-21",
     loyaltyVisits: 21,
     notes: "Two locs combined at the left temple, Jan 2026. Watch that section.",
-    avatarInitials: "ST",
+    avatarInitials: "RS",
   },
   {
     id: "c-4",
-    name: "Sample Client Four",
-    email: "four@bloomkreations.example",
+    name: "Kim Sample",
+    email: "kim@bloomkreations.example",
     phone: "(773) 555-0163",
     stage: "starter",
     since: "2026-07-30",
     loyaltyVisits: 1,
     notes: "New starter set. First retwist due.",
-    avatarInitials: "SF",
+    avatarInitials: "KS",
   },
 ];
 
@@ -278,6 +284,84 @@ const seedJourney: JourneyEntry[] = [
     title: "Double process colour",
     body: "Lifted and toned full head. Copper.",
     shot: "copper-curly-locs",
+  },
+
+  /* --- Kim Sample: brand new. What a starter client sees. ---------------- */
+  {
+    id: "j-5",
+    clientId: "c-4",
+    date: d(-31),
+    stage: "starter",
+    title: "Starter set installed",
+    body: "Parted, sectioned and coiled. First retwist booked for five weeks out.",
+    shot: "starter-locs-hand",
+  },
+
+  /* --- Nia Sample: a year in, mid-budding. -------------------------------- */
+  {
+    id: "j-6",
+    clientId: "c-2",
+    date: d(-350),
+    stage: "starter",
+    title: "Starter set installed",
+    body: "Grid set. Told to leave them alone between visits and she did.",
+    shot: "parts-macro",
+  },
+  {
+    id: "j-7",
+    clientId: "c-2",
+    date: d(-180),
+    stage: "budding",
+    title: "Budding, on schedule",
+    body: "The frizzy stretch. Every five weeks, no tightening at the root.",
+    shot: "crisp-parts-retwist",
+  },
+  {
+    id: "j-8",
+    clientId: "c-2",
+    date: d(-40),
+    stage: "budding",
+    title: "Holding a shape",
+    body: "Roots settled enough to wear it up for the first time.",
+    shot: "loc-bun-parts",
+  },
+
+  /* --- Rae Sample: three years, mature, styled. --------------------------- */
+  {
+    id: "j-9",
+    clientId: "c-3",
+    date: d(-1258),
+    stage: "starter",
+    title: "Started here",
+    body: "First set. Three years ago this month.",
+    shot: "starter-locs-hand",
+  },
+  {
+    id: "j-10",
+    clientId: "c-3",
+    date: d(-720),
+    stage: "teen",
+    title: "Through the teen stage",
+    body: "Length arrived. Kept the same five-week rhythm the whole way.",
+    shot: "filtered-retwist",
+  },
+  {
+    id: "j-11",
+    clientId: "c-3",
+    date: d(-221),
+    stage: "mature",
+    title: "Two locs combined",
+    body: "Left temple. Combined rather than cut, and it took cleanly.",
+    shot: "basketweave-parts",
+  },
+  {
+    id: "j-12",
+    clientId: "c-3",
+    date: d(-12),
+    stage: "mature",
+    title: "Updo for the wedding",
+    body: "Barrel roll. Held all day and came down without a snag.",
+    shot: "barrel-roll-updo",
   },
 ];
 

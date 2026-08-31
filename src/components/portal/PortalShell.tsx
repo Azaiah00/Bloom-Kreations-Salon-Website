@@ -35,12 +35,17 @@ const OWNER_NAV = [
 export default function PortalShell({
   side,
   children,
+  clientId,
 }: {
   side: "client" | "owner";
   children: React.ReactNode;
+  /** Which demo client is being viewed; carried through the nav so switching
+   *  sections does not silently drop back to the default one. */
+  clientId?: string;
 }) {
   const pathname = usePathname();
   const nav = side === "client" ? CLIENT_NAV : OWNER_NAV;
+  const as = clientId ? `?as=${encodeURIComponent(clientId)}` : "";
 
   return (
     <div className="studio grain min-h-screen">
@@ -73,7 +78,7 @@ export default function PortalShell({
                   return (
                     <li key={item.label}>
                       <Link
-                        href={`${item.href}${item.hash}`}
+                        href={`${item.href}${item.href.startsWith("/portal") ? as : ""}${item.hash}`}
                         aria-current={active ? "page" : undefined}
                         className={cn(
                           "inline-flex min-h-11 items-center gap-2.5 rounded-pill px-4 text-sm font-semibold transition-colors lg:w-full",

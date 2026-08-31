@@ -5,6 +5,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
+import DemoSwitcher from "@/components/site/DemoSwitcher";
 import { BUSINESS } from "@/lib/business";
 import { localBusinessSchema, websiteSchema } from "@/lib/schema";
 
@@ -156,6 +157,8 @@ export default function RootLayout({
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
+        {/* Demo only. Delete this and the import when real accounts land. */}
+        <DemoSwitcher />
       </body>
     </html>
   );

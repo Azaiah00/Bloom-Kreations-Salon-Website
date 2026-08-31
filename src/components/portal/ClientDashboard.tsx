@@ -27,10 +27,23 @@ import {
   type Booking,
 } from "@/lib/db";
 
-const CLIENT_ID = "c-demo";
+/** The client this portal opens as when nothing else is asked for. */
+export const DEFAULT_CLIENT_ID = "c-demo";
 const LOYALTY_TARGET = 10;
 
-export default function ClientDashboard() {
+/**
+ * `clientId` comes from the route, which reads it from `?as=` — that is what
+ * lets the demo switcher drop straight into a starter client or a three-year
+ * client rather than only ever showing one loc stage. It is not auth, and it is
+ * not pretending to be: the portal is labelled Demo on every screen.
+ * TODO(backend): this becomes the signed-in user, and `?as=` goes away.
+ */
+export default function ClientDashboard({
+  clientId = DEFAULT_CLIENT_ID,
+}: {
+  clientId?: string;
+}) {
+  const CLIENT_ID = clientId;
   // Snapshot the in-memory store once per interaction so the demo re-renders
   // after a cancel or a rebook. TODO(backend): swap for a real query hook.
   const [tick, setTick] = useState(0);
@@ -124,7 +137,12 @@ export default function ClientDashboard() {
 
         <StageRail current={client.stage} />
 
-        <JourneyTimeline entries={journey} onAdd={refresh} />
+        <JourneyTimeline
+          entries={journey}
+          onAdd={refresh}
+          clientId={CLIENT_ID}
+          clientStage={client.stage}
+        />
       </section>
 
       {/* History */}
@@ -351,7 +369,11 @@ function StageRail({ current }: { current: string }) {
 function JourneyTimeline({
   entries,
   onAdd,
+  clientId,
+  clientStage,
 }: {
+  clientId: string;
+  clientStage: Parameters<typeof stage>[0];
   entries: ReturnType<typeof db.journeyFor>;
   onAdd: () => void;
 }) {
@@ -393,9 +415,9 @@ function JourneyTimeline({
           onClick={() => {
             // TODO(backend): open a real uploader and store the photo.
             db.addJourneyEntry({
-              clientId: CLIENT_ID,
+              clientId,
               date: new Date().toISOString().slice(0, 10),
-              stage: "teen",
+              stage: clientStage,
               title: "New entry",
               body: "In the real product this is where your photo from today would go.",
             });

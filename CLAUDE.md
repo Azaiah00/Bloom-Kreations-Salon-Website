@@ -78,13 +78,47 @@ query the motion uses. If those two disagree the section clips — that is how
 Everything honours `prefers-reduced-motion` by jumping to the finished state. Reduced
 motion must show the same content, never less; `npm run audit:flow` tests it.
 
+## The demo switcher
+
+`src/components/site/DemoSwitcher.tsx`, mounted in the root layout, is the bottom-left
+button that reaches every portal sign-in: the owner dashboard, each demo client at a
+different loc stage, the role picker and the signed-out booking flow. It exists because
+there is no authentication yet, and hunting for URLs in front of a client is worse than
+either option. `devIndicators: false` in `next.config.ts` frees that corner.
+
+Client entries are built from `db.clients()`, so a client added to `db.ts` appears
+without anyone remembering to add it here. `/portal/client?as=<id>` picks which one —
+read on the server, validated against the store, falling back to the default. **That is
+not auth and is not a step toward it.** When real accounts land, delete this component,
+its import in `layout.tsx`, and the `as` parameter in `src/app/portal/client/page.tsx`.
+
+**Two DOM traps, both live in this file's comments, both cost real time:**
+
+- The panel is always mounted and toggled with `hidden`. Unmounting it on the click that
+  navigates makes React and the App Router race for the same nodes.
+- It closes in the link's `onClick`, never by watching `pathname`. A render-phase close
+  during a route transition throws.
+
+## GSAP cleanup runs in a layout effect
+
+`useGsapEffect` in `src/components/motion/hooks.ts` is `useLayoutEffect` on the client.
+This is not a preference. `pin: true` makes ScrollTrigger wrap the pinned element in a
+`pin-spacer` div of its own; with a passive `useEffect`, React tore the subtree down
+before the context could put it back, and **every client-side navigation away from the
+home page threw `Failed to execute 'removeChild' on 'Node'`**, sometimes rendering the
+error boundary instead of the page. Any new GSAP hook uses `useGsapEffect`.
+
+`npm run audit:flow` now fails on any uncaught page error and has an explicit test for
+leaving each pinned page by link. Proven in both directions: reverting to `useEffect`
+fails two tests and reports the exception.
+
 ## Before any handoff
 
 ```bash
 npm run verify         # typecheck + lint + contrast + icons + build + CSS emission
 # then, with the built site on :3100
 npm run audit:a11y     # rendered-DOM checks across every route at 375 and 1440
-npm run audit:flow     # 13 end-to-end tests
+npm run audit:flow     # 17 end-to-end tests; fails on any uncaught page error
 npm run frames         # look at the pinned sections at real scroll depths
 node scripts/marks.mjs # photograph every butterfly at its real size, ground and scroll depth
 ```

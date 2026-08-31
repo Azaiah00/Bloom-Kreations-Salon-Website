@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
     imageSizes: [128, 256, 384, 512],
   },
   poweredByHeader: false,
+  // The dev badge sits bottom-left, which is where the demo switcher lives.
+  // Two floating controls in one corner is one too many in front of a client.
+  devIndicators: false,
   // Trailing slashes off keeps the canonical URLs in the sitemap and the
   // metadata `alternates` identical to what the router actually serves.
   trailingSlash: false,

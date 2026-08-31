@@ -243,6 +243,18 @@
     }
   }
 
+  /* Demo switcher panel. Rises from the button it opens off. */
+  @keyframes demo-pop {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 8px, 0) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* Slow independent drift for the footer butterfly. */
   .drift {
     animation: bk-drift 9s var(--ease-in-out-soft) infinite;
