@@ -4,7 +4,7 @@ import JsonLd from "@/components/site/JsonLd";
 import Reveal from "@/components/motion/Reveal";
 import { Button, Eyebrow, Section } from "@/components/ui";
 import { BUSINESS, SERVICE_COUNT, PRICE_RANGE } from "@/lib/business";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, SITE } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Questions",
@@ -24,7 +24,7 @@ const GROUPS: { title: string; faqs: { q: string; a: string }[] }[] = [
     faqs: [
       {
         q: "How do I book an appointment at Bloom Kreations?",
-        a: `Book online at bloomkreations.com/book, or on her Acuity calendar directly. You can also call or text ${BUSINESS.phone}. Booking online is fastest because you can see the price, the duration and the finish time before you confirm.`,
+        a: `Book online at ${SITE.replace("https://", "")}/book, or on her Acuity calendar directly. You can also call or text ${BUSINESS.phone}. Booking online is fastest because you can see the price, the duration and the finish time before you confirm.`,
       },
       {
         q: "What are Bloom Kreations' hours?",

@@ -6,7 +6,7 @@ import Reveal from "@/components/motion/Reveal";
 import { Butterfly, InstagramGlyph } from "@/components/marks/Marks";
 import { Badge, Button, Eyebrow, Section, Stars } from "@/components/ui";
 import { BUSINESS, HER_WORDS, REVIEWS } from "@/lib/business";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, BUSINESS_SCHEMA_ID } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "About Latesha Reed",
@@ -52,7 +52,7 @@ export default function AboutPage() {
               name: BUSINESS.owner.name,
               alternateName: BUSINESS.owner.knownAs,
               jobTitle: BUSINESS.owner.role,
-              worksFor: { "@id": "https://bloomkreations.com/#business" },
+              worksFor: { "@id": BUSINESS_SCHEMA_ID },
               sameAs: [
                 BUSINESS.social.instagram,
                 BUSINESS.social.instagramPersonal,

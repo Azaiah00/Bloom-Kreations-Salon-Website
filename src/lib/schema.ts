@@ -17,8 +17,10 @@ import {
 } from "./business";
 import { LOC_STAGES } from "./db";
 
-const SITE = "https://bloomkreations.com";
+/** Live deployment URL — drives metadataBase, JSON-LD, sitemap and robots. */
+export const SITE = "https://bloomkreations-preview.netlify.app";
 const ID = `${SITE}/#business`;
+export const BUSINESS_SCHEMA_ID = ID;
 
 export function localBusinessSchema() {
   return {

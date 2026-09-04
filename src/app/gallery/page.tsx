@@ -8,7 +8,7 @@ import { InstagramGlyph } from "@/components/marks/Marks";
 import { Button, Eyebrow, Section } from "@/components/ui";
 import { BUSINESS, HER_WORDS } from "@/lib/business";
 import { GALLERY, LIFESTYLE } from "@/lib/gallery";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, SITE } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -30,7 +30,7 @@ export default function GalleryPage() {
             about: "Loc styling, retwists and protective styles in Chicago",
             image: GALLERY.map((s) => ({
               "@type": "ImageObject",
-              contentUrl: `https://bloomkreations.com/gallery/${s.slug}.webp`,
+              contentUrl: `${SITE}/gallery/${s.slug}.webp`,
               caption: s.alt,
             })),
           },

@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const SITE = "https://bloomkreations.com";
+import { SITE } from "@/lib/schema";
 
 /**
  * Public pages only. The portal is demo data behind a role picker and carries

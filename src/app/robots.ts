@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { SITE } from "@/lib/schema";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -10,7 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/portal", "/portal/"],
       },
     ],
-    sitemap: "https://bloomkreations.com/sitemap.xml",
-    host: "https://bloomkreations.com",
+    sitemap: `${SITE}/sitemap.xml`,
+    host: SITE,
   };
 }

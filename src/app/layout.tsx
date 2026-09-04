@@ -7,7 +7,7 @@ import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import DemoSwitcher from "@/components/site/DemoSwitcher";
 import { BUSINESS } from "@/lib/business";
-import { localBusinessSchema, websiteSchema } from "@/lib/schema";
+import { localBusinessSchema, websiteSchema, SITE } from "@/lib/schema";
 
 /**
  * Fonts are self-hosted rather than fetched from Google, so the site makes no
@@ -59,7 +59,7 @@ const jakarta = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bloomkreations.com"),
+  metadataBase: new URL(SITE),
   title: {
     default: "Bloom Kreations | Loctician in Bridgeport, Chicago",
     template: "%s | Bloom Kreations",
